@@ -3,55 +3,69 @@ import java.io.{FileOutputStream, FileInputStream}
 import scala.io.StdIn
 
 /**
+ * 피크닉 문제 해법
  * Created by kdo on 16. 1. 18.
  */
-object picnic extends App {
+object Picnic extends App {
   Console.setIn(new FileInputStream("/home/kdo/dev/IdeaProjects/algorithm/picnic/data.txt"))
+  Console.setOut(new FileOutputStream("/home/kdo/dev/IdeaProjects/algorithm/picnic/result.txt"))
 
+  /**
+   * 케이스 카운트
+   */
   val cases = StdIn.readLine().toInt
 
-  def execute(total: Int, pairCount: Int, pairList: Array[String]) = {
+  /**
+   * 문제 풀이
+   * @param total 전체 갯수
+   * @param pairCount 쌍 카운트
+   * @param pairList 쌍 데이터
+   * @return 결과
+   */
+  def execute(total: Int, pairCount: Int, pairList: Array[String]): Int = {
     var result: Int = 0
-    var list: List[(Int, Int)] = Nil
-    for (index <- 0 until pairList.size by 2) {
-      list = list :+ ((pairList(index).toInt, pairList(index + 1).toInt))
-    }
-
-    def process(myClass: List[Int]): Int = {
-      val source = 0
-      val target = total
-      val remain = Range(0, total).diff(myClass)
-
-      for (
-        person <- remain
-      ) {
-
+    val pairDatas: List[(Int, Int)] = {
+      var result: List[(Int, Int)] = Nil
+      for (index <- 0 until pairList.length by 2) {
+        result = result :+ ((pairList(index).toInt, pairList(index + 1).toInt))
       }
-
-      (remain) foreach { person =>
-        val isFriend = list.find(element =>
-          (element._1 == person && element._2 == person + 1)
-            && (element._1 == person + 1 && element._2 == person)
-        ).size == 0
-        if (isFriend) {
-          var _myClass = myClass :+ person
-          _myClass = _myClass :+ person + 1
-          if (_myClass.size == total) {
-            println(_myClass)
-            return 1
-          }
-          result = result + process(_myClass)
-        }
-      }
-      //
       result
     }
-    result = result + process(Nil)
+
+    /**
+     * 재귀 카운트 프로세스
+     * @param myClass 수집된 데이터
+     * @return
+     */
+    def process(myClass: List[Int]): Int = {
+      val remain = Range(0, total).diff(myClass)
+
+      val source = remain.head
+      val targets = remain.tail
+
+      targets foreach { target =>
+        val isFriend = pairDatas.find(element =>
+          (element._1 == source && element._2 == target)
+            || (element._1 == target && element._2 == source)
+        ).isDefined
+        if (isFriend) {
+          var _myClass = myClass :+ source
+          _myClass = _myClass :+ target
+          if (_myClass.size == total) {
+            result = result + 1
+            return 1 //루트 케이스
+          }
+          process(_myClass)
+        }
+      }
+      result
+    }
+    result = process(Nil)
     result
   }
 
   (1 to cases) foreach { n =>
-    print(s"Case #$n: ${
+    print(s"${
       val Array(total, pairCount) = StdIn.readLine().split(" ").map(_.toInt)
       val pairList = StdIn.readLine().split(" ")
       execute(total, pairCount, pairList)
