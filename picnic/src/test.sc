@@ -1,2 +1,6 @@
-Range(1,4)
+var result = true
+
+val row = "...###".split("")
+
+row
 
