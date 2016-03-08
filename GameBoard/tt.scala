@@ -1,6 +1,7 @@
-/**
- * Created by kdo on 16. 1. 26.
- */
 
-(0 to 10).toStream.takeWhile(p => p > 5).foreach(a => a)
-
+val x = 1
+  val length = 1
+  val p = x match {
+    case length => 2
+    case _ => 3
+  }
