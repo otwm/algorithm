@@ -1,6 +1,6 @@
 /**
  * N queen 문제 풀이
- * <p>
+ * <p/>
  * Created by kim-dong-o on 16. 3. 5.
  */
 public class Main {
