@@ -65,7 +65,6 @@ object GameBoard extends App {
     if (isInsert(board, new Point(0, 0))) result += 1
     result
   }
-
   (1 to cases) foreach { n =>
     print(s"${
       var list: List[Array[String]] = List()
@@ -78,3 +77,22 @@ object GameBoard extends App {
     }\n")
   }
 }
+
+//
+//import scala.io.StdIn
+//
+///**
+// * Created by kdo on 16. 2. 15.
+// */
+//object ReverseQuard extends App {
+//
+//  def execute(quardString: String) = {
+//
+//  }
+//
+//  (1 to cases) foreach { n =>
+//    print(s"${
+//      execute(StdIn.readLine())
+//    }\n")
+//  }
+//}
