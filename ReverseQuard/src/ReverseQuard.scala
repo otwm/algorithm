@@ -1,4 +1,5 @@
-import java.io.{FileOutputStream, FileInputStream}
+import java.io.{FileInputStream, FileOutputStream}
+import java.util
 
 import scala.io.StdIn
 
@@ -9,70 +10,43 @@ object ReverseQuard extends App {
   Console.setIn(new FileInputStream("/data/1/dev/IdeaProjects/algorithm/ReverseQuard/resources/data.txt"))
   val cases = StdIn.readLine().toInt
 
-  def reverse(quard: List[String]): String = {
-    if (quard.length < 4) {
-      return quard.mkString("")
+  def process(quard: List[String], index: Int): List[String] = {
+    val pre = quard.slice(0, index) ::: List("x" + quard(index + 3) + quard(index + 4) + quard(index + 1) + quard(index + 2))
+    if (quard.length == index + 4) {
+      return pre
     }
-    return quard(2) + quard(3) + quard(0) + quard(1)
+    pre ::: quard.slice(index + 5, quard.length)
   }
 
-  class Result(val head: Option[String], val middle: Option[String], val tail: Option[String]) {
+  def findProcessable(quard: List[String]): Int = {
+    for (index <- 0 until quard.length) {
+      if (
+        index + 4 <= quard.length
+          && quard(index) == "x"
+          && quard(index + 1) != "x"
+          && quard(index + 2) != "x"
+          && quard(index + 3) != "x"
+          && quard(index + 4) != "x"
+      ) {
+        return index
+      }
+    }
+    -1
   }
 
-  def execute(quard: String): List[String] = {
-    val removedx = {
-      if (quard.startsWith("x")) {
-        quard.substring(1, quard.length)
-      } else {
-        quard
-      }
+  def execute(quard: List[String]): List[String] = {
+    var index = findProcessable(quard)
+    var result: List[String] = quard
+    while (index >= 0) {
+      result = process(result, index)
+      index = findProcessable(result)
     }
-    if (removedx.indexOf("x") < 0) {
-      if (quard.length < 4) {
-        return List(removedx)
-      }
-      if (quard.length == 4) {
-        return List("x" + reverse(removedx.map(_.toString).toList))
-      }
-      if (removedx.length > 4) {
-        return List(
-          "x" + reverse(removedx.substring(0, 4).map(_.toString).toList)
-          , removedx.substring(4, removedx.length)
-        )
-      }
-    }
-
-    val head = removedx.substring(0, removedx.indexOf("x"))
-    val tail = removedx.substring(removedx.indexOf("x") + 1, removedx.length)
-    val executed = execute(tail)
-
-    def quardList: List[String] = {
-      var temp: List[String] = Nil
-      temp = temp ::: head.map(_.toString).toList
-      temp = temp ::: executed
-      if (executed.length == 2) {
-        executed(1).map(_.toString).toList
-      }
-      return temp
-    }
-
-    if (quardList.length == 4) {
-      List("x" + reverse(quardList))
-    } else {
-      var spare: List[String] = Nil
-      for {
-        index <- 0 until quardList.length
-        if (index > 3)
-      } {
-        spare = spare ::: List(quardList(index))
-      }
-      List("x" + reverse(quardList)) ::: spare
-    }
+    result
   }
 
   (1 to cases) foreach { n =>
     print(s"${
-      execute(StdIn.readLine())
+      execute(StdIn.readLine().map(_.toString).toList).mkString
     }\n")
   }
 }
