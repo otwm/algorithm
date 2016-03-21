@@ -6,8 +6,8 @@ import scala.io.StdIn
 /**
   * Created by kdo on 16. 2. 15.
   */
-object ReverseQuard extends App {
-  Console.setIn(new FileInputStream("/data/1/dev/IdeaProjects/algorithm/ReverseQuard/resources/data.txt"))
+object Main extends App {
+//  Console.setIn(new FileInputStream("/data/1/dev/IdeaProjects/algorithm/ReverseQuard/resources/data.txt"))
   val cases = StdIn.readLine().toInt
 
   def process(quard: List[String], index: Int): List[String] = {
