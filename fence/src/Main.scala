@@ -1,21 +1,17 @@
-import java.io.FileInputStream
-
 import scala.io.StdIn
 
 /**
   * Created by kdo on 16. 3. 21.
   */
-object Fence extends App {
-  Console.setIn(new FileInputStream("/data/1/dev/IdeaProjects/algorithm/fence/resources/data.txt"))
-
+object Main extends App {
   val cases = StdIn.readLine().toInt
 
-  def execute(length: Int, fences: List[Int]): Int = {
-    var result = -1
+  def execute(length: Int, fences: List[Long]): Long = {
+    var result = -1L
     for (index <- 0 until length) {
-      val width: Int = {
+      val width: Long = {
         val temp = fences(index);
-        def getRight(current: Int): Int = {
+        def getRight(current: Int): Long = {
           if (current == length) return length
           if (fences(current) < temp || (current + 1) == length) {
             return current - 1
@@ -24,7 +20,7 @@ object Fence extends App {
         }
         val right = getRight(index + 1)
 
-        def getLeft(current: Int): Int = {
+        def getLeft(current: Int): Long = {
           if (current < 0) return 0
           if (fences(current) < temp || current == 0) {
             return current + 1
@@ -33,11 +29,12 @@ object Fence extends App {
         }
         val left = getLeft(index - 1)
 
-        right - left + 1
+        right - left + 1L
       }
-      val height = fences(index)
-      if (result < width * height) {
-        result = width * height
+      val height: Long = fences(index)
+      val value: Long = width * height
+      if (result < value) {
+        result = value
       }
     }
     result
@@ -47,7 +44,10 @@ object Fence extends App {
     print(s"${
       execute(
         StdIn.readLine().toInt
-        , StdIn.readLine().split(" ").map(_.toInt).toList)
+        , StdIn.readLine().split(" ").map(_.toLong).toList)
     }\n")
   }
 }
+
+
+
